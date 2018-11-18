@@ -76,7 +76,7 @@ final class Player
     }
 
 
-    public function isNotAllowToAnswer(): bool {
-        return $this->isInPenaltyBox() && $this->isGettingOutOfPenaltyBox() == false;
+    public function isAllowToAnswer(): bool {
+        return !$this->isInPenaltyBox() || $this->isGettingOutOfPenaltyBox();
     }
 }

@@ -46,6 +46,7 @@ class Game
                 $this->wasCorrectlyAnswered();
                 $winner = $this->returnWinner();
             }
+            $this->moveToNextPlayer();
 
 
         } while ($winner == null);
@@ -128,14 +129,10 @@ class Game
     function wasCorrectlyAnswered(): void
     {
         $currentPlayer = $this->getCurrentPlayer();
-        if ($currentPlayer->isNotAllowToAnswer()) {
-            $this->moveToNextPlayer();
-        }
-        else {
+        if ($currentPlayer->isAllowToAnswer()) {
             Messenger::printAnswerWasCorrect();
             $currentPlayer->mineCoin();
             Messenger::printPlayerPurse($currentPlayer);
-            $this->moveToNextPlayer();
         }
 
     }
@@ -156,7 +153,6 @@ class Game
         Messenger::printAnswerWasIncorrect();
         Messenger::printPlayerWasSentToPenaltyBox($currentPlayer);
         $currentPlayer->setIntoPenaltyBox();
-        $this->moveToNextPlayer();
     }
 
 
