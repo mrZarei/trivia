@@ -3,6 +3,9 @@
 require_once __DIR__ . '/Player.php';
 class Game
 {
+    private const MINIMUM_PLAYER = 2;
+    private const BOARD_SIZE = 12;
+
     var $players;
 
     var $popQuestions;
@@ -32,7 +35,7 @@ class Game
     
     function isPlayable(): bool
     {
-        return ($this->totalPlayers() >= 2);
+        return ($this->totalPlayers() >= self::MINIMUM_PLAYER);
     }
 
     function addPlayer(Player $player): void
@@ -151,8 +154,8 @@ class Game
     private function movePlayer(Player $player, int $roll): void
     {
         $newPlace = $player->getPlace() + $roll;
-        if ($newPlace > 11) {
-            $newPlace -= 12;
+        if ($newPlace > self::BOARD_SIZE - 1) {
+            $newPlace -= self::BOARD_SIZE;
         }
         $player->moveToNewPlace($newPlace);
     }

@@ -2,6 +2,8 @@
 final class Player
 {
 
+    private const GOAL = 6;
+
     private $name;
     private $purse;
     private $place;
@@ -75,7 +77,7 @@ final class Player
 
     public function didWin(): bool
     {
-        return $this->purse >= 6;
+        return $this->purse >= self::GOAL ;
     }
 
     public function isNotAllowToAnswer(): bool {
