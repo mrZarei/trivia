@@ -6,9 +6,10 @@ function runGame(): void
 {
     $notAWinner;
     $aGame = new Game();
-    $aGame->add("Chet");
-    $aGame->add("Pat");
-    $aGame->add("Sue");
+
+    $aGame->addPlayer(new Player("Chet"));
+    $aGame->addPlayer(new Player("Pat"));
+    $aGame->addPlayer(new Player("Sue"));
 
 
     do {
