@@ -26,7 +26,7 @@ class Game
             array_push($this->popQuestions, "Pop Question " . $i);
             array_push($this->scienceQuestions, ("Science Question " . $i));
             array_push($this->sportsQuestions, ("Sports Question " . $i));
-            array_push($this->rockQuestions, ("Rock Question " . $i));
+            array_push($this->rockQuestions, ("Rock Question " . $i ));
         }
     }
     
@@ -56,7 +56,7 @@ class Game
         Messenger::printPlyerDice($roll);
 
         if ($currentPlayer->isInPenaltyBox()) {
-            if ($roll % 2 != 0) {
+            if ($this->isOdd($roll)) {
                 $currentPlayer->gettingOutOfPenaltyBox();
 
                 Messenger::printGettingoutOfPenaltyBox($currentPlayer);
@@ -162,6 +162,10 @@ class Game
             $this->currentPlayerIndex = 0;
         }
 
+    }
+
+    private function isOdd(int $roll){
+        return ($roll % 2 == 1);
     }
 }
 
