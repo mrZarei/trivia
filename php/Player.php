@@ -63,12 +63,9 @@ final class Player
     }
 
 
-    public function moveToNewPlace(int $roll): void
+    public function moveToNewPlace(int $newPlace): void
     {
-        $this->place += $roll;
-        if ($this->place > 11) {
-            $this->place -= 12;
-        }
+        $this->place = $newPlace;
     }
 
     public function mineCoin(): void

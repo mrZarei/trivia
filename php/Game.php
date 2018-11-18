@@ -59,7 +59,7 @@ class Game
                 $currentPlayer->gettingOutOfPenaltyBox();
 
                 Messenger::printGettingoutOfPenaltyBox($currentPlayer);
-                $currentPlayer->moveToNewPlace($roll);
+                $this->movePlayer($currentPlayer,$roll);
 
                 Messenger::printPlayerNewLocation($currentPlayer);
                 Messenger::printCurrentCategory($this->currentCategory());
@@ -71,7 +71,7 @@ class Game
 
         } else {
 
-            $currentPlayer->moveToNewPlace($roll);
+            $this->movePlayer($currentPlayer, $roll);
             Messenger::printPlayerNewLocation($currentPlayer);
             Messenger::printCurrentCategory($this->currentCategory());
             $this->pickAQuestion();
@@ -146,6 +146,15 @@ class Game
 
     private function isOdd(int $roll){
         return ($roll % 2 == 1);
+    }
+
+    private function movePlayer(Player $player, int $roll): void
+    {
+        $newPlace = $player->getPlace() + $roll;
+        if ($newPlace > 11) {
+            $newPlace -= 12;
+        }
+        $player->moveToNewPlace($newPlace);
     }
 }
 
