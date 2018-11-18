@@ -156,11 +156,11 @@ class Game
     }
 
 
-    private function getCurrentPlayer(): Player{
+    function getCurrentPlayer(): Player{
         return $this->players[$this->currentPlayerIndex];
     }
 
-    private function moveToNextPlayer(): void
+    function moveToNextPlayer(): void
     {
 
         $this->currentPlayerIndex++;

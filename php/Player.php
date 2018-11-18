@@ -16,6 +16,7 @@ final class Player
         $this->purse = 0;
         $this->place = 0;
         $this->inPenaltyBox = false;
+        $this->isGettingOutOfPenaltyBox = false;
     }
 
     function getName(): string
