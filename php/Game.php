@@ -32,19 +32,18 @@ class Game
     
     function isPlayable(): bool
     {
-        return ($this->howManyPlayers() >= 2);
+        return ($this->totalPlayers() >= 2);
     }
 
-    function addPlayer(Player $player): bool
+    function addPlayer(Player $player): void
     {
         array_push($this->players, $player);
 
         Messenger::printAddUser($player);
-        Messenger::printPlayerNumber($this->howManyPlayers());
-        return true;
+        Messenger::printPlayerNumber($this->totalPlayers());
     }
 
-    function howManyPlayers(): int
+    function totalPlayers(): int
     {
         return count($this->players);
     }
@@ -64,7 +63,7 @@ class Game
 
                 Messenger::printPlayerNewLocation($currentPlayer);
                 Messenger::printCurrentCategory($this->currentCategory());
-                $this->askQuestion();
+                $this->pickAQuestion();
             } else {
                 Messenger::printNotGettingOutOfPenaltyBox($currentPlayer);
                 $currentPlayer->stayingAtPenaltyBox();
@@ -75,12 +74,12 @@ class Game
             $currentPlayer->moveToNewPlace($roll);
             Messenger::printPlayerNewLocation($currentPlayer);
             Messenger::printCurrentCategory($this->currentCategory());
-            $this->askQuestion();
+            $this->pickAQuestion();
         }
 
     }
 
-    function askQuestion(): void
+    function pickAQuestion(): void
     {
         if ($this->currentCategory() == "Pop")
             Messenger::printQuesttion(array_shift($this->popQuestions));
