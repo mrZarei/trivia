@@ -95,16 +95,9 @@ class Game
     function currentCategory(): string
     {
         $currentPlayer = $this->getCurrentPlayer();
-        if ($currentPlayer->getPlace() == 0) return "Pop";
-        if ($currentPlayer->getPlace() == 4) return "Pop";
-        if ($currentPlayer->getPlace() == 8) return "Pop";
-        if ($currentPlayer->getPlace() == 1) return "Science";
-        if ($currentPlayer->getPlace() == 5) return "Science";
-        if ($currentPlayer->getPlace() == 9) return "Science";
-        if ($currentPlayer->getPlace() == 2) return "Sports";
-        if ($currentPlayer->getPlace() == 6) return "Sports";
-        if ($currentPlayer->getPlace() == 10) return "Sports";
-        return "Rock";
+        $categories = array("Pop", "Science", "Sports", "Rock");
+        $categoryIndex = $currentPlayer->getPlace() % count($categories);
+        return $categories[$categoryIndex];
     }
 
 
