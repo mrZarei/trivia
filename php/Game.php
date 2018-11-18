@@ -1,7 +1,5 @@
 <?php
-function echoln($string) {
-  echo $string."\n";
-}
+
 require_once __DIR__ . '/Player.php';
 class Game
 {
@@ -13,7 +11,6 @@ class Game
     var $rockQuestions;
 
     var $currentPlayerIndex = 0;
-    var $isGettingOutOfPenaltyBox;
 
     function __construct()
     {
@@ -51,8 +48,8 @@ class Game
     {
         array_push($this->players, $player);
 
-        echoln($player->getName() . " was added");
-        echoln("They are player number " . count($this->players));
+        Messenger::printAddUser($player);
+        Messenger::printPlayerNumber($this->howManyPlayers());
         return true;
     }
 
@@ -64,33 +61,29 @@ class Game
     function roll(int $roll): void
     {
         $currentPlayer = $this->getCurrentPlayer();
-        echoln($currentPlayer->getName() . " is the current player");
-        echoln("They have rolled a " . $roll);
+        Messenger::printCurrentPlayer($currentPlayer);
+        Messenger::printPlyerDice($roll);
 
         if ($currentPlayer->isInPenaltyBox()) {
             if ($roll % 2 != 0) {
                 $currentPlayer->gettingOutOfPenaltyBox();
 
-                echoln($currentPlayer->getName() . " is getting out of the penalty box");
+                Messenger::printGettingoutOfPenaltyBox($currentPlayer);
                 $currentPlayer->moveToNewPlace($roll);
 
-                echoln($currentPlayer->getName()
-                    . "'s new location is "
-                    . $currentPlayer->getPlace());
-                echoln("The category is " . $this->currentCategory());
+                Messenger::printPlayerNewLocation($currentPlayer);
+                Messenger::printCurrentCategory($this->currentCategory());
                 $this->askQuestion();
             } else {
-                echoln($currentPlayer->getName() . " is not getting out of the penalty box");
+                Messenger::printNotGettingOutOfPenaltyBox($currentPlayer);
                 $currentPlayer->stayingAtPenaltyBox();
             }
 
         } else {
 
             $currentPlayer->moveToNewPlace($roll);
-            echoln($currentPlayer->getName()
-                . "'s new location is "
-                . $currentPlayer->getPlace());
-            echoln("The category is " . $this->currentCategory());
+            Messenger::printPlayerNewLocation($currentPlayer);
+            Messenger::printCurrentCategory($this->currentCategory());
             $this->askQuestion();
         }
 
@@ -99,13 +92,13 @@ class Game
     function askQuestion(): void
     {
         if ($this->currentCategory() == "Pop")
-            echoln(array_shift($this->popQuestions));
+            Messenger::printQuesttion(array_shift($this->popQuestions));
         if ($this->currentCategory() == "Science")
-            echoln(array_shift($this->scienceQuestions));
+            Messenger::printQuesttion(array_shift($this->scienceQuestions));
         if ($this->currentCategory() == "Sports")
-            echoln(array_shift($this->sportsQuestions));
+            Messenger::printQuesttion(array_shift($this->sportsQuestions));
         if ($this->currentCategory() == "Rock")
-            echoln(array_shift($this->rockQuestions));
+            Messenger::printQuesttion(array_shift($this->rockQuestions));
     }
 
 
@@ -130,12 +123,9 @@ class Game
         $currentPlayer = $this->getCurrentPlayer();
         if ($currentPlayer->isInPenaltyBox()) {
             if ($currentPlayer->isGettingOutOfPenaltyBox()) {
-                echoln("Answer was correct!!!!");
+                Messenger::printAnswerWasCorrect();
                 $currentPlayer->mineCoin();
-                echoln($currentPlayer->getName()
-                    . " now has "
-                    . $currentPlayer->getPurse()
-                    . " Gold Coins.");
+                Messenger::printPlayerPurse($currentPlayer);
 
                 $winner = $currentPlayer->didWin();
                 $this->moveToNextPlayer();
@@ -148,12 +138,9 @@ class Game
 
         } else {
 
-            echoln("Answer was corrent!!!!");
+            Messenger::printAnswerWasCorrect();
             $currentPlayer->mineCoin();
-            echoln($currentPlayer->getName()
-                . " now has "
-                . $currentPlayer->getPurse()
-                . " Gold Coins.");
+            Messenger::printPlayerPurse($currentPlayer);
 
             $winner = $currentPlayer->didWin();
             $this->moveToNextPlayer();
@@ -164,8 +151,8 @@ class Game
     function wrongAnswer(): bool
     {
         $currentPlayer = $this->getCurrentPlayer();
-        echoln("Question was incorrectly answered");
-        echoln($currentPlayer->getName() . " was sent to the penalty box");
+        Messenger::printAnswerWasIncorrect();
+        Messenger::printPlayerWasSentToPenaltyBox($currentPlayer);
         $currentPlayer->setIntoPenaltyBox();
         $this->moveToNextPlayer();
         return true;
@@ -184,5 +171,76 @@ class Game
             $this->currentPlayerIndex = 0;
         }
 
+    }
+}
+
+
+
+class Messenger
+{
+    private static function echoln(string $message): void
+    {
+        echo $message . "\n";
+    }
+
+    public static function printAddUser(Player $player): void
+    {
+        self::echoln($player->getName() . " was added");
+    }
+
+    public static function printPlayerNumber(int $playerNumber): void
+    {
+        self::echoln("They are player number " . $playerNumber);
+    }
+
+    public static function printCurrentPlayer(Player $currentPlayer): void
+    {
+        self::echoln($currentPlayer->getName() . " is the current player");
+    }
+
+    public static function printPlyerDice(int $dice): void
+    {
+        self::echoln("They have rolled a " . $dice);
+    }
+
+    public static function printGettingoutOfPenaltyBox(Player $player): void
+    {
+        self::echoln($player->getName() . " is getting out of the penalty box");
+    }
+
+    public static function printNotGettingOutOfPenaltyBox(Player $player): void
+    {
+        self::echoln($player->getName() . " is not getting out of the penalty box");
+    }
+
+    public static function printPlayerNewLocation(Player $player){
+        self::echoln($player->getName() . "'s new location is " . $player->getPlace());
+    }
+
+    public static function printCurrentCategory(string $category): void
+    {
+        self::echoln("The category is " . $category);
+    }
+
+    public static function printAnswerWasCorrect(): void
+    {
+        self::echoln("Answer was correct!!!!");
+    }
+
+    public static function printPlayerPurse(Player $player){
+        self::echoln($player->getName(). " now has " . $player->getPurse() . " Gold Coins.");
+    }
+
+    public static function printAnswerWasIncorrect(): void
+    {
+        self::echoln("Question was incorrectly answered");
+    }
+    public static function printPlayerWasSentToPenaltyBox(Player $player){
+        self::echoln($player->getName() . " was sent to the penalty box");
+    }
+
+    public static function printQuesttion(string $question): void
+    {
+        self::echoln($question);
     }
 }
