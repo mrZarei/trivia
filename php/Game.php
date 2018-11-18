@@ -5,6 +5,8 @@ class Game
 {
     private const MINIMUM_PLAYER = 2;
     private const BOARD_SIZE = 12;
+    private const INCORRECT_ANSWER_INDEX = 7;
+    private const GOAL = 6;
 
     var $players;
 
@@ -32,7 +34,26 @@ class Game
             array_push($this->rockQuestions, ("Rock Question " . $i ));
         }
     }
-    
+    public function run(): void
+    {
+        do {
+
+            $this->roll(rand(0, 5) + 1);
+
+            if ($this->getAnswer() == self::INCORRECT_ANSWER_INDEX) {
+                $this->wrongAnswer();
+            } else {
+                $this->wasCorrectlyAnswered();
+                $winner = $this->returnWinner();
+            }
+
+
+        } while ($winner == null);
+    }
+    private function getAnswer(): int
+    {
+        return rand(0, 9);
+    }
     function isPlayable(): bool
     {
         return ($this->totalPlayers() >= self::MINIMUM_PLAYER);
@@ -104,32 +125,38 @@ class Game
     }
 
 
-    function wasCorrectlyAnswered(): bool
+    function wasCorrectlyAnswered(): void
     {
         $currentPlayer = $this->getCurrentPlayer();
         if ($currentPlayer->isNotAllowToAnswer()) {
             $this->moveToNextPlayer();
-            return true;
         }
-
-        Messenger::printAnswerWasCorrect();
-        $currentPlayer->mineCoin();
-        Messenger::printPlayerPurse($currentPlayer);
-
-        $winner = $currentPlayer->didWin();
-        $this->moveToNextPlayer();
-        return !$winner;
+        else {
+            Messenger::printAnswerWasCorrect();
+            $currentPlayer->mineCoin();
+            Messenger::printPlayerPurse($currentPlayer);
+            $this->moveToNextPlayer();
+        }
 
     }
 
-    function wrongAnswer(): bool
+    private function returnWinner(): ?Player
+    {
+        foreach ($this->players as $player){
+            if($player->getPurse() == self::GOAL){
+                return $player;
+            }
+        }
+        return null;
+    }
+
+    function wrongAnswer(): void
     {
         $currentPlayer = $this->getCurrentPlayer();
         Messenger::printAnswerWasIncorrect();
         Messenger::printPlayerWasSentToPenaltyBox($currentPlayer);
         $currentPlayer->setIntoPenaltyBox();
         $this->moveToNextPlayer();
-        return true;
     }
 
 

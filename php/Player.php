@@ -75,10 +75,6 @@ final class Player
         $this->purse++;
     }
 
-    public function didWin(): bool
-    {
-        return $this->purse >= self::GOAL ;
-    }
 
     public function isNotAllowToAnswer(): bool {
         return $this->isInPenaltyBox() && $this->isGettingOutOfPenaltyBox() == false;
