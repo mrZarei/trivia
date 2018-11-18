@@ -112,31 +112,19 @@ class Game
     function wasCorrectlyAnswered(): bool
     {
         $currentPlayer = $this->getCurrentPlayer();
-        if ($currentPlayer->isInPenaltyBox()) {
-            if ($currentPlayer->isGettingOutOfPenaltyBox()) {
-                Messenger::printAnswerWasCorrect();
-                $currentPlayer->mineCoin();
-                Messenger::printPlayerPurse($currentPlayer);
-
-                $winner = $currentPlayer->didWin();
-                $this->moveToNextPlayer();
-                return !$winner;
-            } else {
-                $this->moveToNextPlayer();
-                return true;
-            }
-
-
-        } else {
-
-            Messenger::printAnswerWasCorrect();
-            $currentPlayer->mineCoin();
-            Messenger::printPlayerPurse($currentPlayer);
-
-            $winner = $currentPlayer->didWin();
+        if ($currentPlayer->isNotAllowToAnswer()) {
             $this->moveToNextPlayer();
-            return !$winner;
+            return true;
         }
+
+        Messenger::printAnswerWasCorrect();
+        $currentPlayer->mineCoin();
+        Messenger::printPlayerPurse($currentPlayer);
+
+        $winner = $currentPlayer->didWin();
+        $this->moveToNextPlayer();
+        return !$winner;
+
     }
 
     function wrongAnswer(): bool

@@ -80,4 +80,8 @@ final class Player
     {
         return $this->purse >= 6;
     }
+
+    public function isNotAllowToAnswer(): bool {
+        return $this->isInPenaltyBox() && $this->isGettingOutOfPenaltyBox() == false;
+    }
 }
